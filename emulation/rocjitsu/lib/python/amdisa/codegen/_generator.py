@@ -692,6 +692,13 @@ class CodeGenerator:
                 # operand, which can read past the operand-bound VGPR/SGPR
                 # allocation before the &63u arithmetic mask hides the high
                 # 32 bits of the result.
+                #
+                # The u32 form v_lshl_add_u32 is intentionally absent: its
+                # dtype default already routes through the 32-bit read_lane
+                # path, so the shift-count read is already correct.  The
+                # missing &31u mask for u32 lshl_add is supplied by the
+                # 'lshl_add' deriver in sema_derive._VectorTernary, which
+                # selects 31u/63u from ty.size.
                 if name_lower in (
                     'v_lshlrev_b64',
                     'v_lshrrev_b64',
